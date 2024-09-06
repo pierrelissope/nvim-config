@@ -23,6 +23,7 @@ return {
       require("vscode").load("dark")
     end,
   },
+
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
@@ -46,6 +47,14 @@ return {
           highlight = {
             Background = { fg = "white", bg = "#191919" },
           },
+        },
+        filesystem = {
+          follow_current_file = true, -- Pour suivre le fichier actif
+          hijack_netrw_behavior = "open_default", -- Optionnelle, pour remplacer netrw
+          use_libuv_file_watcher = true, -- Mise à jour automatique de l'arborescence lors des changements de fichiers
+        },
+        buffers = {
+          follow_current_file = true, -- Suivre le fichier actif dans les buffers
         },
         default = {
           highlight = {
