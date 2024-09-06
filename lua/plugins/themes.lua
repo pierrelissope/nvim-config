@@ -34,25 +34,32 @@ return {
         window = {
           position = "left",
           width = 40,
-          -- Personnalisation des couleurs
+          mappings = {
+            ["<CR>"] = "open", -- Remplace l'action d'ouverture par défaut pour l'Entrée
+            ["l"] = "open", -- Assure-toi que 'l' est bien configuré pour ouvrir
+            ["h"] = "close_node",
+            ["v"] = "open_vsplit",
+            ["s"] = "open_split",
+            ["t"] = "open_tabnew",
+            -- Ajoute d'autres mappings si nécessaire
+          },
           highlight = {
             Background = { fg = "white", bg = "#191919" },
           },
         },
         default = {
           highlight = {
-            -- Assigner la couleur de l'indentation pour NeoTree
-            NeoTreeIndentMarker = { fg = vscode_colors.vscLineNumber }, -- Couleur des marqueurs d'indentation
+            NeoTreeIndentMarker = { fg = vscode_colors.vscLineNumber },
           },
         },
       })
 
       -- Ajuster les groupes de mise en surbrillance si nécessaire
       vim.cmd([[
-        highlight NeoTreeNormal guibg=#191919
-        highlight NeoTreeNormalNC guibg=#191919
-        highlight NeoTreeIndentMarker guifg=#383a37
-      ]])
+      highlight NeoTreeNormal guibg=#191919
+      highlight NeoTreeNormalNC guibg=#191919
+      highlight NeoTreeIndentMarker guifg=#383a37
+    ]])
     end,
   },
 }

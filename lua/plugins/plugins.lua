@@ -1,5 +1,3 @@
--- ~/.config/nvim/lua/plugins.lua ou similaire
-
 return {
   -- LazyVim pour la gestion des plugins
   "folke/lazy.nvim",
@@ -20,7 +18,7 @@ return {
       cmp.setup({
         snippet = {
           expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
+            vim.fn["vsnip#anonymous"](args.body) -- Utiliser vsnip pour les snippets
           end,
         },
         formatting = {
@@ -34,26 +32,26 @@ return {
           }),
         },
         mapping = cmp.mapping.preset.insert({
-          ["<C-n>"] = cmp.mapping.select_next_item(),
-          ["<C-p>"] = cmp.mapping.select_prev_item(),
-          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<C-e>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-n>"] = cmp.mapping.select_next_item(), -- Sélectionner l'élément suivant
+          ["<C-p>"] = cmp.mapping.select_prev_item(), -- Sélectionner l'élément précédent
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4), -- Défilement des documents
+          ["<C-f>"] = cmp.mapping.scroll_docs(4), -- Défilement des documents
+          ["<C-Space>"] = cmp.mapping.complete(), -- Activer la complétion
+          ["<C-e>"] = cmp.mapping.abort(), -- Annuler la complétion
+          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirmer la sélection
         }),
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "nvim_lsp" }, -- Source LSP
+          { name = "buffer" }, -- Source buffer
+          { name = "path" }, -- Source path
         }),
         completion = {
-          keyword_length = 1,
+          keyword_length = 1, -- Longueur minimale du mot pour la complétion
         },
         experimental = {
-          ghost_text = false,
+          ghost_text = false, -- Désactiver le texte fantôme
         },
-        preselect = cmp.PreselectMode.None,
+        preselect = cmp.PreselectMode.None, -- Aucune pré-sélection
       })
     end,
   },
@@ -64,16 +62,18 @@ return {
     config = function()
       local lspconfig = require("lspconfig")
 
+      -- Configuration pour clangd
       lspconfig["clangd"].setup({
         on_attach = function(client, bufnr)
           local bufopts = { noremap = true, silent = true, buffer = bufnr }
+          -- Raccourcis clavier pour les fonctionnalités LSP
           vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
           vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
           vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
           vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
         end,
-        cmd = { "clangd" }, -- Assure-toi que clangd recherche dans le bon répertoire
+        cmd = { "clangd" }, -- Assure-toi que clangd est installé et accessible
         root_dir = function(fname)
           return lspconfig.util.root_pattern("compile_flags.txt", "compile_commands.json", ".git")(fname)
         end,
@@ -85,7 +85,6 @@ return {
         "pyright",
         "rust_analyzer",
         "sqls",
-        "eslint",
         "tailwindcss",
         "cssls", -- Vérifiez si "cssls" est correct dans la documentation officielle
       }
@@ -95,6 +94,7 @@ return {
         lspconfig[lsp].setup({
           on_attach = function(client, bufnr)
             local bufopts = { noremap = true, silent = true, buffer = bufnr }
+            -- Raccourcis clavier pour les fonctionnalités LSP
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
             vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
             vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
@@ -121,10 +121,10 @@ return {
     },
     opts = {
       defaults = {
-        layout_strategy = "horizontal",
-        layout_config = { prompt_position = "top" },
-        sorting_strategy = "ascending",
-        winblend = 0,
+        layout_strategy = "horizontal", -- Stratégie de mise en page horizontale
+        layout_config = { prompt_position = "top" }, -- Position du prompt en haut
+        sorting_strategy = "ascending", -- Tri croissant des résultats
+        winblend = 0, -- Transparence de la fenêtre
       },
     },
   },
@@ -169,7 +169,6 @@ return {
       require("mason-lspconfig").setup({
         ensure_installed = {
           "tsserver",
-          "eslint",
           "tailwindcss",
           "cssls", -- Vérifiez si "cssls" est correct
           "pyright",
