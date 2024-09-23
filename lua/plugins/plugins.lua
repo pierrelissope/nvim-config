@@ -2,6 +2,7 @@ return {
   -- LazyVim pour la gestion des plugins
   "folke/lazy.nvim",
 
+  "HelifeWasTaken/VimTek",
   -- Plugin pour l'autocomplétion et LSP
   {
     "hrsh7th/nvim-cmp",
@@ -105,7 +106,95 @@ return {
       end
     end,
   },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    config = function()
+      local null_ls = require("null-ls")
+      local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = true })
 
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.prettier,
+        },
+        on_attach = function(client, bufnr)
+          if client.supports_method("textDocument/formatting") then
+            vim.keymap.set("n", "<Leader>f", function()
+              vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+            end, { buffer = bufnr, desc = "[lsp] format" })
+
+            -- Format on save
+            vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = bufnr,
+              group = group,
+              callback = function()
+                vim.lsp.buf.format({ bufnr = bufnr, async = true })
+              end,
+              desc = "[lsp] format on save",
+            })
+          end
+        end,
+      })
+    end,
+  },
+  -- Prettier
+  {
+    "MunifTanjim/prettier.nvim",
+    config = function()
+      local prettier = require("prettier")
+
+      prettier.setup({
+        bin = "prettier", -- ou `'prettierd'` (v0.23.3+)
+        filetypes = {
+          "css",
+          "graphql",
+          "html",
+          "javascript",
+          "javascriptreact",
+          "json",
+          "less",
+          "markdown",
+          "scss",
+          "typescript",
+          "typescriptreact",
+          "yaml",
+        },
+        ["null-ls"] = {
+          condition = function()
+            return prettier.config_exists({
+              check_package_json = true,
+            })
+          end,
+          runtime_condition = function(params)
+            return true
+          end,
+          timeout = 5000,
+        },
+        cli_options = {
+          arrow_parens = "always",
+          bracket_spacing = true,
+          bracket_same_line = false,
+          embedded_language_formatting = "auto",
+          end_of_line = "lf",
+          html_whitespace_sensitivity = "css",
+          jsx_single_quote = false,
+          print_width = 80,
+          prose_wrap = "preserve",
+          quote_props = "as-needed",
+          semi = true,
+          single_attribute_per_line = false,
+          single_quote = false,
+          tab_width = 2,
+          trailing_comma = "es5",
+          use_tabs = false,
+          vue_indent_script_and_style = false,
+        },
+        cli_options = {
+          config_precedence = "prefer-file", -- ou "cli-override" ou "file-override"
+        },
+      })
+    end,
+  },
   -- Configure telescope
   {
     "nvim-telescope/telescope.nvim",
